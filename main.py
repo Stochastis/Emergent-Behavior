@@ -1,26 +1,30 @@
-import numpy
-import matplotlib.pyplot as plt
+"""
+A simple example of an animated plot
+"""
+import matplotlib
+
+matplotlib.use("TkAgg")
 import matplotlib.animation as animation
-import tkinter
+import matplotlib.pyplot as plt
+import numpy as np
 
-xpoints = [1, 2, -1]
-ypoints = [2, 4, -2]
+fig, ax = plt.subplots()
 
-
-def main():
-    ani = animation.FuncAnimation(plt, animate())
-
-
-def plot():
-    for i in range(0, len(xpoints)):
-        plt.scatter(xpoints[i], ypoints[i])
-    return plt
+x = np.arange(0, 2 * np.pi, 0.01)
+line, = ax.plot(x, np.sin(x))
 
 
-def animate():
-    for i in range(0, len(xpoints)):
-        xpoints[i] = xpoints[i] + 1
+def animate(i):
+    line.set_ydata(np.sin(x + i / 10.0))  # update the data
+    return line,
 
 
-if __name__ == "__main__":
-    main()
+# Init only required for blitting to give a clean slate.
+def init():
+    line.set_ydata(np.ma.array(x, mask=True))
+    return line,
+
+
+ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), init_func=init,
+                              interval=25, blit=True)
+plt.show()
