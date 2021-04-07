@@ -17,20 +17,16 @@ class ParticleBox:
 
     def __init__(self,
                  init_state=None,
-                 size=0.04,
-                 M=0.05,
-                 G=9.8):
+                 size=0.04):
         if init_state is None:
             init_state = [[1, 0, 0, -1],
                           [-0.5, 0.5, 0.5, 0.5],
                           [-0.5, -0.5, -0.5, 0.5]]
         self.init_state = np.asarray(init_state, dtype=float)
-        self.M = M * np.ones(self.init_state.shape[0])
         self.size = size
         self.state = self.init_state.copy()  # A list of all particle's positions and velocities.
         self.time_elapsed = 0
         self.bounds = [-2, 2, -2, 2]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
-        self.G = G
 
     def step(self, dt):
         """step once by dt seconds"""
@@ -39,28 +35,26 @@ class ParticleBox:
         # Update positions by adding the particle's velocity to their position.
         self.state[:, :2] += dt * self.state[:, 2:]
 
-        # check for crossing boundary
+        # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
+        # particle has crossed a boundary.
         crossed_x1 = (self.state[:, 0] < self.bounds[0] + self.size)
         crossed_x2 = (self.state[:, 0] > self.bounds[1] - self.size)
         crossed_y1 = (self.state[:, 1] < self.bounds[2] + self.size)
         crossed_y2 = (self.state[:, 1] > self.bounds[3] - self.size)
 
+        # Sets the position of all particles that are over a given boundary to just inside the boundary.
         self.state[crossed_x1, 0] = self.bounds[0] + self.size
         self.state[crossed_x2, 0] = self.bounds[1] - self.size
-
         self.state[crossed_y1, 1] = self.bounds[2] + self.size
         self.state[crossed_y2, 1] = self.bounds[3] - self.size
 
+        # Reverses the velocity of all particles that are over a given boundary.
         self.state[crossed_x1 | crossed_x2, 2] *= -1
         self.state[crossed_y1 | crossed_y2, 3] *= -1
 
-        # add gravity
-        self.state[:, 3] -= self.M * self.G * dt
 
-
-# ------------------------------------------------------------
-# set up initial state
-np.random.seed(0)
+# Set up the initial state.
+np.random.seed(5)
 init_state = -0.5 + np.random.random((50, 4))
 init_state[:, :2] *= 3.9
 
