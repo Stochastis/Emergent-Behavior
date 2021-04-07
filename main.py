@@ -2,7 +2,6 @@ import matplotlib
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
 
 matplotlib.use("TkAgg")
 
@@ -14,18 +13,13 @@ class ParticleBox:
        [[x1, y1, vx1, vy1],
         [x2, y2, vx2, vy2],
         ...               ]
-
-    bounds is the size of the box: [xmin, xmax, ymin, ymax]
     """
 
     def __init__(self,
                  init_state=None,
-                 bounds=None,  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
                  size=0.04,
                  M=0.05,
                  G=9.8):
-        if bounds is None:
-            bounds = [-2, 2, -2, 2]
         if init_state is None:
             init_state = [[1, 0, 0, -1],
                           [-0.5, 0.5, 0.5, 0.5],
@@ -33,56 +27,19 @@ class ParticleBox:
         self.init_state = np.asarray(init_state, dtype=float)
         self.M = M * np.ones(self.init_state.shape[0])
         self.size = size
-        self.state = self.init_state.copy()
+        self.state = self.init_state.copy()  # A list of all particle's positions and velocities.
         self.time_elapsed = 0
-        self.bounds = bounds
+        self.bounds = [-2, 2, -2, 2]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
         self.G = G
 
     def step(self, dt):
         """step once by dt seconds"""
         self.time_elapsed += dt
 
-        # update positions
+        # Update positions by adding the particle's velocity to their position.
         self.state[:, :2] += dt * self.state[:, 2:]
 
-        # find pairs of particles undergoing a collision
-        D = squareform(pdist(self.state[:, :2]))
-        ind1, ind2 = np.where(D < 2 * self.size)
-        unique = (ind1 < ind2)
-        ind1 = ind1[unique]
-        ind2 = ind2[unique]
-
-        # update velocities of colliding pairs
-        for i1, i2 in zip(ind1, ind2):
-            # mass
-            m1 = self.M[i1]
-            m2 = self.M[i2]
-
-            # location vector
-            r1 = self.state[i1, :2]
-            r2 = self.state[i2, :2]
-
-            # velocity vector
-            v1 = self.state[i1, 2:]
-            v2 = self.state[i2, 2:]
-
-            # relative location & velocity vectors
-            r_rel = r1 - r2
-            v_rel = v1 - v2
-
-            # momentum vector of the center of mass
-            v_cm = (m1 * v1 + m2 * v2) / (m1 + m2)
-
-            # collisions of spheres reflect v_rel over r_rel
-            rr_rel = np.dot(r_rel, r_rel)
-            vr_rel = np.dot(v_rel, r_rel)
-            v_rel = 2 * r_rel * vr_rel / rr_rel - v_rel
-
-            # assign new velocities
-            self.state[i1, 2:] = v_cm + v_rel * m2 / (m1 + m2)
-            self.state[i2, 2:] = v_cm - v_rel * m1 / (m1 + m2)
-
-            # check for crossing boundary
+        # check for crossing boundary
         crossed_x1 = (self.state[:, 0] < self.bounds[0] + self.size)
         crossed_x2 = (self.state[:, 0] > self.bounds[1] - self.size)
         crossed_y1 = (self.state[:, 1] < self.bounds[2] + self.size)
