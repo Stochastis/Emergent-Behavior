@@ -18,6 +18,8 @@ class ParticleBox:
     def __init__(self,
                  init_state=None,
                  size=0.04):
+        # Defaults to 3 particles with these positions/velocities if none are specified upon the initialization of a
+        # ParticleBox instance.
         if init_state is None:
             init_state = [[1, 0, 0, -1],
                           [-0.5, 0.5, 0.5, 0.5],
@@ -54,21 +56,25 @@ class ParticleBox:
 
 
 # Set up the initial state.
+
 np.random.seed(5)
+# A 50 X 4 array filled with random numbers from -0.5 to 0.5. This
+# represents 50 particles with starting positions and velocities as 4 values generated randomly.
 init_state = -0.5 + np.random.random((50, 4))
-init_state[:, :2] *= 3.9
+init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
 
 box = ParticleBox(init_state, size=0.04)
 dt = 1. / 30  # 30fps
 
-# ------------------------------------------------------------
-# set up figure and animation
+# Set up figure. Basically just makes the window and visual scaling properties.
 fig = plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
-                     xlim=(-3.2, 3.2), ylim=(-2.4, 2.4))
+                     xlim=(-3.2, 3.2), ylim=(-3.2, 3.2))
 
-# particles holds the locations of the particles
+# The particles variable holds the locations of the particles.
+# The 'bo' parameter is the color and type of marker. This one means the particles will be represented as blue circles.
+# The ms parameter is the marker size.
 particles, = ax.plot([], [], 'bo', ms=6)
 
 # rect is the box edge
