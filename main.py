@@ -38,7 +38,7 @@ class ParticleBox:
         self.state[:, :2] += dt * self.state[:, 2:4]
         for i in range(0, len(self.state)):
             following = int(self.state[1, 4])
-            self.state[i, 2] = (self.state[i, 2] + self.state[following, 2]) / 2
+            self.state[i, 2] = (self.state[i, 2] + (self.state[i, 0] - self.state[following, 0])) / 2
             self.state[i, 3] = (self.state[i, 3] + self.state[following, 3]) / 2
             break  # TODO: Get rid of this line.
 
