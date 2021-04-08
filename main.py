@@ -1,3 +1,5 @@
+import time
+
 import matplotlib
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
@@ -28,20 +30,22 @@ class ParticleBox:
         self.size = size
         self.state = self.init_state.copy()  # A list of all particle's positions and velocities.
         self.time_elapsed = 0
-        self.bounds = [-2., 2., -2., 2.]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
+        self.bounds = [-2.9, 2.9, -2.9, 2.9]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
 
     def step(self, dt):
         """step once by dt seconds"""
         self.time_elapsed += dt
 
         # Update positions by adding the particle's velocity to their position.
-        self.state[:, :2] += dt * self.state[:, 2:4]
+        self.state[:, :2] += (dt * 1) * self.state[:, 2:4]
         for i in range(0, len(self.state)):
             following = int(self.state[1, 4])
-            xtargetvector = -(self.state[i, 0] - self.state[following, 0])
-            ytargetvector = -(self.state[i, 1] - self.state[following, 1])
-            self.state[i, 2] = (self.state[i, 2] + 2 * xtargetvector)
-            self.state[i, 3] = (self.state[i, 3] + 2 * ytargetvector)
+            xtotargetvector = -(np.random.random() * (self.state[i, 0] - self.state[following, 0]))
+            ytotargetvector = -(np.random.random() * (self.state[i, 1] - self.state[following, 1]))
+            xtargetvector = (np.random.random() * self.state[following, 0])
+            ytargetvector = (np.random.random() * self.state[following, 1])
+            self.state[i, 2] = min(8, (self.state[i, 2] + xtotargetvector + xtargetvector))
+            self.state[i, 3] = min(8, (self.state[i, 3] + ytotargetvector + ytargetvector))
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
@@ -63,14 +67,19 @@ class ParticleBox:
 
 # Set up the initial state.
 
-np.random.seed(456)
+np.random.seed(int(time.time()))
 # Create a 50 X 5 array filled with random numbers from -0.5 to 0.5. This
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
 init_state = -0.5 + np.random.random((50, 5))
 init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
 # Set the last element in the array to the ID of another particle.
+availableTargets = [0] * 50
+for i in range(0, len(availableTargets)):
+    availableTargets[i] = i
 for i in init_state:
-    i[4] = np.random.randint(0, 50)
+    target = availableTargets[np.random.randint(0, len(availableTargets))]
+    i[4] = target
+    availableTargets.remove(target)
 
 # Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
 box = ParticleBox(init_state, size=0.04)
