@@ -38,8 +38,10 @@ class ParticleBox:
         self.state[:, :2] += dt * self.state[:, 2:4]
         for i in range(0, len(self.state)):
             following = int(self.state[1, 4])
-            self.state[i, 2] = (self.state[i, 2] + (self.state[i, 0] - self.state[following, 0])) / 2
-            self.state[i, 3] = (self.state[i, 3] + (self.state[i, 1] - self.state[following, 1])) / 2
+            xtargetvector = -(self.state[i, 0] - self.state[following, 0])
+            ytargetvector = -(self.state[i, 1] - self.state[following, 1])
+            self.state[i, 2] = (self.state[i, 2] + 2 * xtargetvector)
+            self.state[i, 3] = (self.state[i, 3] + 2 * ytargetvector)
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
@@ -69,7 +71,6 @@ init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they
 # Set the last element in the array to the ID of another particle.
 for i in init_state:
     i[4] = np.random.randint(0, 50)
-print("DEBUG: init_state = " + str(init_state))
 
 # Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
 box = ParticleBox(init_state, size=0.04)
