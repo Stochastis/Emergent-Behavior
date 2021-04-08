@@ -94,7 +94,7 @@ def init():
 
 
 def animate(i):
-    """perform animation step"""
+    """Perform an animation step."""
     global box, rect, dt, ax, fig
     box.step(dt)
 
