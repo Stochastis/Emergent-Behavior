@@ -39,8 +39,7 @@ class ParticleBox:
         for i in range(0, len(self.state)):
             following = int(self.state[1, 4])
             self.state[i, 2] = (self.state[i, 2] + (self.state[i, 0] - self.state[following, 0])) / 2
-            self.state[i, 3] = (self.state[i, 3] + self.state[following, 3]) / 2
-            break  # TODO: Get rid of this line.
+            self.state[i, 3] = (self.state[i, 3] + (self.state[i, 1] - self.state[following, 1])) / 2
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
@@ -62,7 +61,7 @@ class ParticleBox:
 
 # Set up the initial state.
 
-np.random.seed(543210)
+np.random.seed(456)
 # Create a 50 X 5 array filled with random numbers from -0.5 to 0.5. This
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
 init_state = -0.5 + np.random.random((50, 5))
@@ -87,7 +86,7 @@ ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
 # The ms parameter is the marker size.
 particles, = ax.plot([], [], 'bo', ms=6)
 
-# rect is the box edge.
+# The rect variable is the box edge.
 rect = plt.Rectangle((box.bounds[0], box.bounds[2]),
                      box.bounds[1] - box.bounds[0],
                      box.bounds[3] - box.bounds[2],
