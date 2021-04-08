@@ -101,8 +101,9 @@ def animate(i):
     ms = int(fig.dpi * 2 * box.size * fig.get_figwidth()
              / np.diff(ax.get_xbound())[0])
 
-    # update pieces of the animation
+    # Update pieces of the animation.
     rect.set_edgecolor('k')
+    # Update the positions of the particles.
     particles.set_data(box.state[:, 0], box.state[:, 1])
     particles.set_markersize(ms)
     return particles, rect
