@@ -36,6 +36,11 @@ class ParticleBox:
 
         # Update positions by adding the particle's velocity to their position.
         self.state[:, :2] += dt * self.state[:, 2:4]
+        for i in range(0, len(self.state)):
+            following = int(self.state[1, 4])
+            self.state[i, 2] = (self.state[i, 2] + self.state[following, 2]) / 2
+            self.state[i, 3] = (self.state[i, 3] + self.state[following, 3]) / 2
+            break  # TODO: Get rid of this line.
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
