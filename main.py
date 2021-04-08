@@ -28,7 +28,7 @@ class ParticleBox:
         self.size = size
         self.state = self.init_state.copy()  # A list of all particle's positions and velocities.
         self.time_elapsed = 0
-        self.bounds = [-2, 2, -2, 2]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
+        self.bounds = [-2., 2., -2., 2.]  # Size of the box. Should be formatted as [xmin, xmax, ymin, ymax]
 
     def step(self, dt):
         """step once by dt seconds"""
@@ -77,7 +77,7 @@ ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
 # The ms parameter is the marker size.
 particles, = ax.plot([], [], 'bo', ms=6)
 
-# rect is the box edge
+# rect is the box edge.
 rect = plt.Rectangle(box.bounds[::2],
                      box.bounds[1] - box.bounds[0],
                      box.bounds[3] - box.bounds[2],
