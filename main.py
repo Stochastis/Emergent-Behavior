@@ -9,13 +9,6 @@ matplotlib.use("TkAgg")
 
 
 class ParticleBox:
-    """Orbits class
-
-    init_state is an [N x 4] array, where N is the number of particles:
-       [[x1, y1, vx1, vy1],
-        [x2, y2, vx2, vy2],
-        ...               ]
-    """
 
     def __init__(self,
                  init_state=None,
@@ -42,10 +35,8 @@ class ParticleBox:
             following = int(self.state[1, 4])
             xtotargetvector = -(np.random.random() * (self.state[i, 0] - self.state[following, 0]))
             ytotargetvector = -(np.random.random() * (self.state[i, 1] - self.state[following, 1]))
-            xtargetvector = (np.random.random() * self.state[following, 0])
-            ytargetvector = (np.random.random() * self.state[following, 1])
-            self.state[i, 2] = min(8, (self.state[i, 2] + xtotargetvector + xtargetvector))
-            self.state[i, 3] = min(8, (self.state[i, 3] + ytotargetvector + ytargetvector))
+            self.state[i, 2] = min(8, (self.state[i, 2] + xtotargetvector))
+            self.state[i, 3] = min(8, (self.state[i, 3] + ytotargetvector))
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
