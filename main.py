@@ -62,7 +62,11 @@ np.random.seed(5)
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
 init_state = -0.5 + np.random.random((50, 4))
 init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
+# Add a fifth, empty element to each particle's array for storing the ID of the particle they are following.
+init_state[:].append[0]
+print("DEBUG: init_state = " + str(init_state))
 
+# Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
 box = ParticleBox(init_state, size=0.04)
 dt = 1. / 30  # 30fps
 
