@@ -57,13 +57,14 @@ class ParticleBox:
 
 # Set up the initial state.
 
-np.random.seed(5)
-# A 50 X 5 array filled with random numbers from -0.5 to 0.5. This
+np.random.seed(543210)
+# Create a 50 X 5 array filled with random numbers from -0.5 to 0.5. This
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
 init_state = -0.5 + np.random.random((50, 5))
 init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
 # Set the last element in the array to the ID of another particle.
-init_state[:, 4] = np.random.randint(0, 50)
+for i in init_state:
+    i[4] = np.random.randint(0, 50)
 print("DEBUG: init_state = " + str(init_state))
 
 # Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
