@@ -35,7 +35,7 @@ class ParticleBox:
         self.time_elapsed += dt
 
         # Update positions by adding the particle's velocity to their position.
-        self.state[:, :2] += dt * self.state[:, 2:]
+        self.state[:, :2] += dt * self.state[:, 2:4]
 
         # Check for crossing boundary and create four arrays with boolean values for each particle that signify if a
         # particle has crossed a boundary.
@@ -58,12 +58,11 @@ class ParticleBox:
 # Set up the initial state.
 
 np.random.seed(5)
-# A 50 X 4 array filled with random numbers from -0.5 to 0.5. This
+# A 50 X 5 array filled with random numbers from -0.5 to 0.5. This
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
-init_state = -0.5 + np.random.random((50, 4))
+init_state = -0.5 + np.random.random((50, 5))
 init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
-# Add a fifth, empty element to each particle's array for storing the ID of the particle they are following.
-init_state[:].append[0]
+init_state[:, 4] = 0
 print("DEBUG: init_state = " + str(init_state))
 
 # Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
