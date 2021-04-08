@@ -86,7 +86,7 @@ ax.add_patch(rect)
 
 
 def init():
-    """initialize animation"""
+    """Initialize animation."""
     global box, rect
     particles.set_data([], [])
     rect.set_edgecolor('none')
