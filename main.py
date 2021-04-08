@@ -78,7 +78,7 @@ ax = fig.add_subplot(111, aspect='equal', autoscale_on=False,
 particles, = ax.plot([], [], 'bo', ms=6)
 
 # rect is the box edge.
-rect = plt.Rectangle(box.bounds[::2],
+rect = plt.Rectangle((box.bounds[0], box.bounds[2]),
                      box.bounds[1] - box.bounds[0],
                      box.bounds[3] - box.bounds[2],
                      ec='none', lw=2, fc='none')
