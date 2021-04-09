@@ -57,20 +57,24 @@ class ParticleBox:
 
 
 # Set up the initial state.
-
-np.random.seed(int(time.time()))
 # Create a 50 X 5 array filled with random numbers from -0.5 to 0.5. This
 # represents 50 particles with starting positions and velocities as 4 values generated randomly.
-init_state = -0.5 + np.random.random((50, 5))
-init_state[:, :2] *= 3.9  # Multiply the positions of the particles by 4 so they're evenly spread through the box.
+# Multiply the positions of the particles by 4 so they're evenly spread through the box.
 # Set the last element in the array to the ID of another particle.
-availableTargets = [0] * 50
-for i in range(0, len(availableTargets)):
+np.random.seed(int(time.time()))
+numberOfParticles = 50
+init_state = -0.5 + np.random.random((numberOfParticles, 5))
+init_state[:, :2] *= 3.9
+availableTargets = [0] * numberOfParticles
+for i in range(0, numberOfParticles):
     availableTargets[i] = i
-for i in init_state:
+index = 0
+for i in range(0, numberOfParticles):
     target = availableTargets[np.random.randint(0, len(availableTargets))]
-    i[4] = target
+    init_state[index, 4] = target
+    print("Set " + str(index) + "'s target to " + str(target))
     availableTargets.remove(target)
+    index = target
 
 # Make an instance of the ParticleBox class named box. Initialize it with the random positions and velocities.
 box = ParticleBox(init_state, size=0.04)
